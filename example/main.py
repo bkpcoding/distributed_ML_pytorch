@@ -94,6 +94,7 @@ def main(args):
                 log_obj['test_loss'], log_obj['test_accuracy']= evaluate( net, testloader, args)
                 loss = running_loss / (args.log_interval)
                 run.log('loss', loss)
+                running_loss = 0.0
                 print("Timestamp: {timestamp} | "
                       "Iteration: {iteration:6} | "
                       "Loss: {training_loss:6.4f} | "
