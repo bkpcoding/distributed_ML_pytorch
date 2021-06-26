@@ -62,6 +62,7 @@ def main(args):
         net = net.cuda()
 
     for epoch in range(args.epochs):  # loop over the dataset multiple times
+        running_loss = 0.0
         print("Training for epoch {}".format(epoch))
         for i, data in enumerate(trainloader, 0):
             # get the inputs
@@ -87,16 +88,18 @@ def main(args):
                 'training_loss': loss.item(),
                 'training_accuracy': accuracy,
             }
+            running_loss += loss.item()
 
             if i % args.log_interval == 0 and i > 0:    # print every n mini-batches
                 log_obj['test_loss'], log_obj['test_accuracy']= evaluate( net, testloader, args)
+                loss = running_loss / (args.log_interval)
+                run.log('loss', loss)
                 print("Timestamp: {timestamp} | "
                       "Iteration: {iteration:6} | "
                       "Loss: {training_loss:6.4f} | "
                       "Accuracy : {training_accuracy:6.4f} | "
                       "Test Loss: {test_loss:6.4f} | "
                       "Test Accuracy: {test_accuracy:6.4f}".format(**log_obj))
-
             logs.append(log_obj)
                 
         val_loss, val_accuracy = evaluate(net, testloader, args, verbose=True)
