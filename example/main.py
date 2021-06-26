@@ -9,6 +9,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.distributed as dist
+from azureml.core import Run
 
 from datetime import datetime
 from models import LeNet, AlexNet
@@ -18,7 +19,7 @@ import pandas as pd
 import torch.optim as optim
 from distbelief.optim import DownpourSGD
 from distbelief.server import ParameterServer
-
+run = Run.get_context()
 def get_dataset(args, transform):
     """
     :param dataset_name:
