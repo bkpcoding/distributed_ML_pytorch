@@ -20,6 +20,7 @@ import torch.optim as optim
 from distbelief.optim import DownpourSGD
 from distbelief.server import ParameterServer
 run = Run.get_context()
+start_time = datetime.now()
 def get_dataset(args, transform):
     """
     :param dataset_name:
@@ -63,8 +64,10 @@ def main(args):
 
     for epoch in range(args.epochs):  # loop over the dataset multiple times
         running_loss = 0.0
+        count = 0
         print("Training for epoch {}".format(epoch))
         for i, data in enumerate(trainloader, 0):
+            count = count + 1
             # get the inputs
             inputs, labels = data
 
@@ -92,9 +95,6 @@ def main(args):
 
             if i % args.log_interval == 0 and i > 0:    # print every n mini-batches
                 log_obj['test_loss'], log_obj['test_accuracy']= evaluate( net, testloader, args)
-                loss = running_loss / (args.log_interval)
-                run.log('loss', loss)
-                running_loss = 0.0
                 print("Timestamp: {timestamp} | "
                       "Iteration: {iteration:6} | "
                       "Loss: {training_loss:6.4f} | "
@@ -102,9 +102,13 @@ def main(args):
                       "Test Loss: {test_loss:6.4f} | "
                       "Test Accuracy: {test_accuracy:6.4f}".format(**log_obj))
             logs.append(log_obj)
-                
+        loss = running_loss / count
+        run.log('loss',loss)
+        epoch_time = datetime.now()
+        run.log('time', (epoch_time - start_time))
         val_loss, val_accuracy = evaluate(net, testloader, args, verbose=True)
         scheduler.step(val_loss)
+       
 
     df = pd.DataFrame(logs)
     print(df)
