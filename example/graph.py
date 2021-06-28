@@ -1,13 +1,10 @@
-"""
-plots accuracy (test and train) vs. time
-"""
 import matplotlib as mpl
 mpl.use('TkAgg')
 
 import matplotlib.pyplot as plt
 import pandas as pd
 
-colors = ['blue', 'green', 'red', 'orange', 'magenta']
+colors = ['blue']
 files_to_read = ['log/single.csv']
 log_dataframes = list(map(pd.read_csv, files_to_read))
 
