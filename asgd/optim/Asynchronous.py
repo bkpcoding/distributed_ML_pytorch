@@ -16,7 +16,7 @@ class Listener(MessageListener):
         _LOGGER.info("Processing message: {}".format(message_code.name))
         if message_code == MessageCode.ParameterUpdate:
             unravel_model_params(self.model, parameter)
-
+#asynchronous optimizer
 class Asynchronous(Optimizer):
 
     def __init__(self, params, lr=required, n_push=required, n_pull=required, model=required):
